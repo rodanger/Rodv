@@ -1,735 +1,1334 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>RODV</title>
-  <meta name="description" content="">
-  <meta name="keywords" content="">
+  <title>RODV - IT Solutions & Technology</title>
+  <meta name="description" content="RODV Studio - Innovative IT services, web development, and technological solutions for your business.">
+  <meta name="keywords" content="RODV, IT services, web development, technology solutions, startup">
 
-  <!-- Favicons -->
   <link href="/assets/rodv1.png" rel="icon">
-  <link href="/assets/rodv1.png"  rel="apple-touch-icon">
+  <link href="/assets/rodv1.png" rel="apple-touch-icon">
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com" rel="preconnect">
-  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
- 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech&display=swap" rel="stylesheet">
-  <!--   ---> 
-  <link href="https://fonts.googleapis.com/css2?family=Share+Tech&family=Syne+Mono&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne+Mono&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-  <!-- Vendor CSS Files -->
-  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
-  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
-  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  <!-- Main CSS File -->
-  <link href="assets/css/main.css" rel="stylesheet">
+    body {
+      font-family: 'Space Grotesk', sans-serif;
+      background: #0a0a0f;
+      color: #fff;
+      overflow-x: hidden;
+    }
 
-  <!-- =======================================================
-  * Template Name: eStartup
-  * Template URL: https://bootstrapmade.com/estartup-bootstrap-landing-page-template/
-  * Updated: Aug 07 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
+    /* ── 3D Canvas ── */
+    #canvas-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+    }
+
+    /* ── Loading Screen ── */
+    #loader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #0a0a0f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 1s ease, visibility 1s ease;
+    }
+    #loader.hidden { opacity: 0; visibility: hidden; }
+    #loader-logo img {
+      width: 140px;
+      height: auto;
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+    @keyframes pulse-glow {
+      0%, 100% { filter: drop-shadow(0 0 20px rgba(251,191,36,0.3)); }
+      50% { filter: drop-shadow(0 0 40px rgba(251,191,36,0.6)); }
+    }
+    .loader-bar {
+      width: 200px;
+      height: 3px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      margin-top: 24px;
+      overflow: hidden;
+    }
+    .loader-bar-inner {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #fbbf24, #d97706);
+      border-radius: 4px;
+      transition: width 2s ease;
+    }
+
+    /* ── Hero Overlay ── */
+    #hero {
+      position: relative;
+      z-index: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 0 24px;
+      pointer-events: none;
+    }
+    #hero * { pointer-events: auto; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      border: 1px solid rgba(251,191,36,0.3);
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #fbbf24;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background: rgba(251,191,36,0.08);
+      backdrop-filter: blur(12px);
+      margin-bottom: 24px;
+      animation: fade-up 1s ease 0.8s both;
+    }
+    .hero-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: blink 1.5s ease-in-out infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .hero-logo {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fade-up 1s ease 1s both;
+    }
+    .hero-logo img {
+      width: clamp(160px, 25vw, 340px);
+      height: auto;
+      filter: drop-shadow(0 0 40px rgba(251,191,36,0.15));
+      transition: transform 0.3s ease;
+    }
+    .hero-logo img:hover {
+      transform: scale(1.03);
+    }
+
+    .hero-sub {
+      font-size: clamp(1rem, 2vw, 1.35rem);
+      font-weight: 300;
+      color: rgba(255,255,255,0.7);
+      max-width: 560px;
+      margin: 20px auto 36px;
+      line-height: 1.7;
+      animation: fade-up 1s ease 1.2s both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+      animation: fade-up 1s ease 1.4s both;
+    }
+
+    .btn-primary-3d {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 36px;
+      border: none;
+      border-radius: 50px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #0a0a0f;
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn-primary-3d:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(251,191,36,0.35);
+    }
+
+    .btn-outline-3d {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 36px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: #fff;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(12px);
+      cursor: pointer;
+      text-decoration: none;
+      transition: border-color 0.3s ease, background 0.3s ease;
+    }
+    .btn-outline-3d:hover {
+      border-color: rgba(251,191,36,0.5);
+      background: rgba(251,191,36,0.1);
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Scroll indicator ── */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      animation: fade-up 1s ease 2s both;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+      animation: scroll-pulse 2s ease-in-out infinite;
+    }
+    @keyframes scroll-pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    /* ── Content Sections ── */
+    .content-section {
+      position: relative;
+      z-index: 1;
+      padding: 120px 24px;
+      background: rgba(10,10,15,0.65);
+    }
+    .content-section::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: linear-gradient(to bottom, transparent, rgba(10,10,15,0.65));
+      pointer-events: none;
+    }
+
+    .section-container {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .section-header h2 {
+      font-family: 'Syne Mono', monospace;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 40px;
+    }
+    .section-header p {
+      color: rgba(255,255,255,0.7);
+      font-size: 1.05rem;
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Glass Cards ── */
+    .glass-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 32px;
+      backdrop-filter: blur(20px);
+      transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .glass-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(251,191,36,0.2);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .glass-card .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(217,119,6,0.1));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+      color: #fbbf24;
+      animation: iconFloat 3s ease-in-out infinite;
+    }
+    .glass-card:nth-child(2) .icon { animation-delay: 0.4s; }
+    .glass-card:nth-child(3) .icon { animation-delay: 0.8s; }
+    .glass-card:nth-child(4) .icon { animation-delay: 1.2s; }
+    .glass-card:nth-child(5) .icon { animation-delay: 1.6s; }
+    .glass-card:nth-child(6) .icon { animation-delay: 2.0s; }
+    .glass-card h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .glass-card p {
+      color: rgba(255,255,255,0.55);
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    @keyframes iconFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    /* ── Stats ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-bottom: 100px;
+    }
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .stat-item {
+      text-align: center;
+      padding: 28px;
+    }
+    .stat-item .number {
+      font-family: 'Syne Mono', monospace;
+      font-size: 2.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-item .label {
+      color: rgba(255,255,255,0.4);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    /* ── Portfolio / Gallery ── */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .portfolio-card {
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      aspect-ratio: 4 / 3;
+      transition: transform 0.4s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .portfolio-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(251,191,36,0.25);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    }
+    .portfolio-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+    .portfolio-card:hover img {
+      transform: scale(1.06);
+    }
+    .portfolio-card .card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10,10,15,0.85) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+    }
+    .portfolio-card:hover .card-overlay {
+      opacity: 1;
+    }
+    .portfolio-card .card-overlay h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+    .portfolio-card .card-overlay p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.5);
+    }
+    .portfolio-card .img-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.15);
+      font-size: 0.9rem;
+    }
+    .portfolio-card .img-placeholder .spinner {
+      width: 28px;
+      height: 28px;
+      border: 2px solid rgba(251,191,36,0.15);
+      border-top-color: #fbbf24;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Lightbox ── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      background: rgba(0,0,0,0.92);
+      backdrop-filter: blur(16px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+      padding: 24px;
+    }
+    .lightbox.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .lightbox .lightbox-content {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 40px 120px rgba(0,0,0,0.6);
+      transform: scale(0.92);
+      transition: transform 0.35s ease;
+    }
+    .lightbox.open .lightbox-content {
+      transform: scale(1);
+    }
+    .lightbox .lightbox-content img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      max-height: 85vh;
+      transition: opacity 0.2s ease;
+    }
+    .lightbox .lightbox-close {
+      position: fixed;
+      top: 20px;
+      right: 28px;
+      background: none;
+      border: none;
+      color: rgba(255,255,255,0.6);
+      font-size: 2.2rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+      z-index: 9999;
+      line-height: 1;
+    }
+    .lightbox .lightbox-close:hover { color: #fff; }
+    .lightbox .lightbox-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.4rem;
+      transition: background 0.3s ease;
+      z-index: 9999;
+    }
+    .lightbox .lightbox-nav:hover { background: rgba(251,191,36,0.2); }
+    .lightbox .lightbox-prev { left: 20px; }
+    .lightbox .lightbox-next { right: 20px; }
+    @media (max-width: 480px) {
+      .lightbox .lightbox-prev { left: 12px; width: 40px; height: 40px; font-size: 1.1rem; }
+      .lightbox .lightbox-next { right: 12px; width: 40px; height: 40px; font-size: 1.1rem; }
+      .lightbox .lightbox-close { top: 12px; right: 16px; font-size: 1.8rem; }
+    }
+
+    /* ── Scroll reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Contact ── */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    @media (max-width: 768px) {
+      .contact-grid { grid-template-columns: 1fr; }
+    }
+
+    .contact-info .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .contact-info .info-item i {
+      font-size: 1.3rem;
+      color: #fbbf24;
+      margin-top: 2px;
+    }
+    .contact-info .info-item h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 2px;
+    }
+    .contact-info .info-item p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.8);
+    }
+
+    .contact-form input,
+    .contact-form textarea {
+      width: 100%;
+      padding: 14px 18px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      background: rgba(255,255,255,0.03);
+      color: #fff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: rgba(251,191,36,0.3);
+    }
+    .contact-form input::placeholder,
+    .contact-form textarea::placeholder {
+      color: rgba(255,255,255,0.2);
+    }
+    .contact-form textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    .contact-form .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 480px) {
+      .contact-form .form-row { grid-template-columns: 1fr; }
+    }
+
+    /* ── Footer ── */
+    .footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 40px 24px;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      background: rgba(10,10,15,0.65);
+    }
+    .footer p {
+      color: rgba(255,255,255,0.3);
+      font-size: 0.85rem;
+    }
+    .footer .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .footer .social-links a {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255,255,255,0.4);
+      text-decoration: none;
+      transition: border-color 0.3s ease, color 0.3s ease;
+    }
+    .footer .social-links a:hover {
+      border-color: #fbbf24;
+      color: #fbbf24;
+    }
+
+    /* ── Nav ── */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 16px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.4s ease;
+    }
+    .navbar.scrolled {
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .navbar .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .navbar .logo img {
+      height: 36px;
+      width: auto;
+    }
+    .navbar .logo span {
+      font-family: 'Syne Mono', monospace;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .navbar .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+      align-items: center;
+    }
+    .navbar .nav-links a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.5);
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      padding: 8px 0;
+    }
+    .navbar .nav-links a:hover { color: #fbbf24; }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 101;
+      background: none;
+      border: none;
+    }
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .navbar .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 260px;
+        height: 100vh;
+        flex-direction: column;
+        background: rgba(10,10,15,0.95);
+        backdrop-filter: blur(24px);
+        padding: 80px 32px 32px;
+        gap: 8px;
+        transition: right 0.35s ease;
+        border-left: 1px solid rgba(255,255,255,0.05);
+      }
+      .navbar .nav-links.open { right: 0; }
+      .navbar .nav-links a {
+        display: block;
+        padding: 14px 12px;
+        border-radius: 12px;
+        font-size: 0.95rem;
+      }
+      .navbar .nav-links a:hover {
+        background: rgba(251,191,36,0.08);
+      }
+    }
+
+    /* ── Glow orbs ── */
+    .glow-orb {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(100px);
+      opacity: 0.15;
+    }
+    .glow-orb-1 {
+      top: -100px;
+      right: -100px;
+      background: #fbbf24;
+      animation: float-orb 12s ease-in-out infinite;
+    }
+    .glow-orb-2 {
+      bottom: -100px;
+      left: -100px;
+      background: #d97706;
+      animation: float-orb 16s ease-in-out infinite reverse;
+    }
+    @keyframes float-orb {
+      0%, 100% { transform: translate(0, 0); }
+      50% { transform: translate(40px, -40px); }
+    }
+
+
+
+    .pe {
+      color: rgba(255,255,255,0.7);
+      margin: 2.2em;
+    }
+  </style>
 </head>
+<body>
 
-<style>
+  <!-- Loading Screen -->
+  <div id="loader">
+    <div id="loader-logo"><img src="/assets/rodv1.png" alt="RODV"></div>
+    <div class="loader-bar"><div class="loader-bar-inner" id="loader-bar-inner"></div></div>
+  </div>
 
-  #nave {
-    font-family: "Sekuya", system-ui;
-    font-weight: 800;
-    font-style: normal;
-    transition: color 0.8s ease;
-  }
+  <!-- Glow Orbs -->
+  <div class="glow-orb glow-orb-1"></div>
+  <div class="glow-orb glow-orb-2"></div>
 
-  #imgs {
-    border-radius: 20px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
+  <!-- 3D Canvas -->
+  <div id="canvas-container"></div>
 
-  #imgs:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  }
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <a href="#" class="logo">
+      <!--<img src="/assets/rodv1.png" alt="RODV" style="height:32px;"> -->
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#portfolio">Portfolio</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
 
-  #nav nav{
-    font-weight: 600;
-    transition: color 0.3s ease;
-    font-family: "Sekuya", system-ui;
-    font-weight: 700;
-    font-style: normal;
-
-
-  }
-
-#title {
-  cursor: pointer;
-  display: inline-block;
-  font-family: "Syne Mono", monospace;
-  font-weight: 600;
-  font-style: normal;
-}
-
-#title span {
-  display: inline-block;
-  transition: transform 0.3s ease, color 0.3s ease;
-}
-
-#title:hover span {
-  color: #f97316; /* color acento RODV */
-}
-
-#title:hover span:nth-child(odd) {
-  transform: translateY(-6px);
-}
-
-#title:hover span:nth-child(even) {
-  transform: translateY(6px);
-}
-
-#button1 {
-  
-  font-family: "Syne Mono", monospace;
-  color: var(--contrast-color);
-  background: #b88d3d;
-  font-family: var(--heading-font);
-  font-weight: 500;
-  font-size: 14px;
-  letter-spacing: 1px;
-  display: inline-block;
-  padding: 12px 36px;
-  border-radius: 50px;
-  transition: 0.5s;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-#button1:hover {
-  background: #daa138;
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.1);
-}
-
-#feat {
-  
-  width: 70%;
-}
-  
-</style>
-
-<body class="index-page">
-
-  <header id="header" class="header d-flex align-items-center sticky-top">
-    <div class="container-fluid container-xl position-relative d-flex align-items-center justify-content-between">
-
-      <a href="index.html" class="logo d-flex align-items-center">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-       
-        <img src="/assets/rodv1.png" alt="" height="70rem" width="80px">
-      </a>
-
-      <nav id="navmenu" class="navmenu">
-        <ul>
-          <li><a id="nave" href="#hero" class="active">Home</a></li>
-          <li><a id="nave" href="#about">About</a></li>
-          <li><a id="nave" href="#services">Services</a></li>
-          <li><a id="nave" href="#features">Features</a></li>
-          <li><a id="nave" href="#pricing">Pricing</a></li>
-          <li><a id="nave" href="#contact">Contact</a></li>
-        </ul>
-        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-      </nav>
-
+  <!-- Hero -->
+  <section id="hero">
+    <div class="hero-badge"><span class="dot"></span> IT Solutions & Technology</div>
+    <div class="hero-logo">
+      <img src="/assets/rodv1.png" alt="RODV">
     </div>
-  </header>
+    <p class="hero-sub">Building technological solutions that drive innovation. From web development to IT infrastructure — we engineer the future of your business.</p>
+    <div class="hero-actions">
+      <a href="#services"><button class="btn-primary-3d">Explore Services →</button></a>
+      <a href="#contact" class="btn-outline-3d">Contact Us</a>
+    </div>
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
 
-  <main class="main">
-
-    <!-- Hero Section -->
-    <section id="hero" class="hero section light-background">
-
-      <div class="container position-relative" data-aos="fade-up" data-aos-delay="100">
-        <div class="row gy-5">
-          <div class="col-lg-6 order-2 order-lg-1 d-flex flex-column justify-content-center">
-            <h2 id="title">RODV Studio</h2>
-            <p>We create innovative web solutions and IT services that help your business grow. Our team delivers custom websites, designs, and technology strategies tailored to your needs.</p>
-
-            <div class="d-flex">
-              <a href="#about" id="button1" >Get Started</a>
-              <!--a href="https://www.youtube.com/watch?v=Y7f98aduVJ8" class="glightbox btn-watch-video d-flex align-items-center"><i class="bi bi-play-circle"></i><span>Watch Video</span></!----!a-->
-            </div>
-          </div>
-          <div class="col-lg-6 order-1 order-lg-2">
-            <img id="imgs" src="assets/img/design.png" class="img-fluid" alt="">
-          </div>
+  <!-- Stats -->
+  <section class="content-section" id="about">
+    <div class="section-container">
+      <div class="stats-grid">
+        <div class="stat-item glass-card">
+          <div class="number">50+</div>
+          <div class="label">Projects Delivered</div>
+        </div>
+        <div class="stat-item glass-card">
+          <div class="number">24/7</div>
+          <div class="label">Support Available</div>
+        </div>
+        <div class="stat-item glass-card">
+          <div class="number">100%</div>
+          <div class="label">Client Satisfaction</div>
+        </div>
+        <div class="stat-item glass-card">
+          <div class="number">5+</div>
+          <div class="label">Years Experience</div>
         </div>
       </div>
 
-      <div class="icon-boxes position-relative" data-aos="fade-up" data-aos-delay="200">
-        <div class="container position-relative">
-          <div class="row gy-4 mt-5">
+      <div class="section-header">
+        <h1 class="pe">Who We Are</h1>
+        <p class="pe">We build more than websites — we create digital experiences. From web development to IT solutions, we help businesses grow smarter, faster, and stronger.</p>
+      </div>
+    </div>
+  </section>
 
-            <div class="col-xl-3 col-md-6">
-              <div class="icon-box">
-                <div class="icon"><img src="assets/img/icons/webdev.gif" alt="" width="50px" height="50px"></div>
-                <h4 class="title"><a href="" class="stretched-link">Web Development</a></h4>
-              </div>
-            </div><!--End Icon Box -->
-
-            <div class="col-xl-3 col-md-6">
-              <div class="icon-box">
-                <div class="icon"><img src="assets/img/icons/i8.gif" alt="" width="50px" height="50px"></div>
-                <h4 class="title"><a href="" class="stretched-link">Cloud Services</a></h4>
-              </div>
-            </div><!--End Icon Box -->
-
-            <div class="col-xl-3 col-md-6">
-              <div class="icon-box">
-                <div class="icon"><img src="assets/img/icons/i7.gif" alt="" width="50px" height="50px"></div>
-                <h4 class="title"><a href="" class="stretched-link">SEO</a></h4>
-              </div>
-            </div><!--End Icon Box -->
-
-
-             <div class="col-xl-3 col-md-6">
-              <div class="icon-box">
-                <div class="icon"><img src="assets/img/icons/ux.gif" alt="" width="50px" height="50px"></div>
-                <h4 class="title"><a href="" class="stretched-link">UX/UI Design</a></h4>
-              </div>
-            </div><!--End Icon Box -->
-
-          </div>
+  <!-- Services -->
+  <section class="content-section" id="services">
+    <div class="section-container">
+      <div class="section-header">
+        <h1 class="pe">Our Services</h1>
+        <p class="pe">We build more than websites — we create digital experiences. From web development to IT solutions, we help businesses grow smarter, faster, and stronger.</p>
+      </div>
+      <div class="services-grid">
+        <div class="glass-card">
+          <div class="icon">🌐</div>
+          <h3>Web Development</h3>
+          <p>Custom websites and web applications built with cutting-edge technologies for optimal performance.</p>
+        </div>
+        <div class="glass-card">
+          <div class="icon">☁️</div>
+          <h3>Cloud Services</h3>
+          <p>Scalable cloud infrastructure, migration, and management to keep your business connected.</p>
+        </div>
+        <div class="glass-card">
+          <div class="icon">🎨</div>
+          <h3>UI/UX Design</h3>
+          <p>User-centered interfaces that combine aesthetics with seamless functionality.</p>
+        </div>
+        <div class="glass-card">
+          <div class="icon">🔒</div>
+          <h3>IT Support</h3>
+          <p>Reliable technical support, system maintenance, and security solutions available 24/7.</p>
+        </div>
+        <div class="glass-card">
+          <div class="icon">📈</div>
+          <h3>SEO & Marketing</h3>
+          <p>Data-driven strategies to boost your online presence and reach your target audience.</p>
+        </div>
+        <div class="glass-card">
+          <div class="icon">⚡</div>
+          <h3>Optimization</h3>
+          <p>Enhance website performance, speed, and security to deliver the best user experience.</p>
         </div>
       </div>
+    </div>
+  </section>
 
-    </section><!-- /Hero Section -->
-
-    <!-- About Section -->
-    <section id="about" class="about section">
-
-      <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100">
-            <p class="who-we-are">Who We Are</p>
-            <h3>Unleashing Potential with Creative Technology</h3>
-            <p class="fst-italic">
-              We build more than websites — we create digital experiences. From web development to IT solutions, we help businesses grow smarter, faster, and stronger.
-            </p>
-            <ul>
-              <li><i class="bi bi-check-circle"></i> <span>Custom web development tailored to your business needs.</span></li>
-              <li><i class="bi bi-check-circle"></i> <span>Reliable IT services to keep your operations running smoothly.</span></li>
-              <li><i class="bi bi-check-circle"></i> <span>Innovative solutions combining design, strategy, and cutting-edge technology.</span></li>
-            </ul>
-
-            
-          </div>
-
-          <div class="col-lg-6 about-images" data-aos="fade-up" data-aos-delay="200">
-            <div class="row gy-4">
-              <div class="col-lg-6">
-                <img src="assets/img/about.jpg" class="img-fluid" alt="">
-              </div>
-              <div class="col-lg-6">
-                <div class="row gy-4">
-                  <div class="col-lg-12">
-                    <img src="assets/img/company.jpg" class="img-fluid" alt="">
-                  </div>
-                  <div class="col-lg-12">
-                    <img src="assets/img/sys.jpg" class="img-fluid" alt="">
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-
+  <!-- Portfolio -->
+  <section class="content-section" id="portfolio">
+    <div class="section-container">
+      <div class="section-header">
+        <h1 class="pe">Our Portfolio</h3>
+        <p class="pe">A showcase of our work — tap any card to view full image</p>
       </div>
-    </section><!-- /About Section -->
-
-    <!-- Services Section -->
-      <section id="services" class="services section">
-
-        <!-- Section Title -->
-        <div class="container section-title" data-aos="fade-up">
-          <h2>Services</h2>
-          <div><span>Check Our</span> <span class="description-title">Services</span></div>
-        </div><!-- End Section Title -->
-
-        <div class="container">
-
-          <div class="row gy-4">
-
-            <!-- Websites -->
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
-              <div class="service-item position-relative">
-                <div class="icon">
-                  <i class="bi bi-laptop"></i>
-                </div>
-                <a href="#" class="stretched-link">
-                  <h3>Websites</h3>
-                </a>
-                <p>Custom website development and solutions tailored to your business needs.</p>
-              </div>
-            </div><!-- End Service Item -->
-
-            <!-- IT Support -->
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
-              <div class="service-item position-relative">
-                <div class="icon">
-                  <i class="bi bi-hdd-network"></i>
-                </div>
-                <a href="#" class="stretched-link">
-                  <h3>IT Support</h3>
-                </a>
-                <p>Reliable technical support, system maintenance, and IT solutions to keep your business running smoothly.</p>
-              </div>
-            </div><!-- End Service Item -->
-
-            <!-- Design -->
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
-              <div class="service-item position-relative">
-                <div class="icon">
-                  <i class="bi bi-palette"></i>
-                </div>
-                <a href="#" class="stretched-link">
-                  <h3>Design</h3>
-                </a>
-                <p>Creative and user-friendly web and app interfaces designed to engage your audience.</p>
-              </div>
-            </div><!-- End Service Item -->
-
-            <!-- Marketing -->
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
-              <div class="service-item position-relative">
-                <div class="icon">
-                  <i class="bi bi-megaphone"></i>
-                </div>
-                <a href="#" class="stretched-link">
-                  <h3>Marketing</h3>
-                </a>
-                <p>Digital marketing strategies to grow your brand and reach your target audience effectively.</p>
-              </div>
-            </div><!-- End Service Item -->
-
-            <!-- Customization -->
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
-              <div class="service-item position-relative">
-                <div class="icon">
-                  <i class="bi bi-gear"></i>
-                </div>
-                <a href="#" class="stretched-link">
-                  <h3>Customization</h3>
-                </a>
-                <p>Tailored solutions and features to meet the exact needs of your business and projects.</p>
-              </div>
-            </div><!-- End Service Item -->
-
-            <!-- Optimization -->
-            <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
-              <div class="service-item position-relative">
-                <div class="icon">
-                  <i class="bi bi-speedometer2"></i>
-                </div>
-                <a href="#" class="stretched-link">
-                  <h3>Optimization</h3>
-                </a>
-                <p>Enhance website performance, speed, and security to deliver the best user experience.</p>
-              </div>
-            </div><!-- End Service Item -->
-
-          </div><!-- End Row -->
-
-        </div><!-- End Container -->
-
-      </section><!-- /Services Section -->
-
-
-    <!-- Features Section -->
-      <section id="features" class="features section light-background">
-
-        <!-- Section Title -->
-        <div class="container section-title" data-aos="fade-up">
-          <h2>Features</h2>
-          <div><span>Check Our</span> <span class="description-title">Features</span></div>
-        </div><!-- End Section Title -->
-
-        <div class="container">
-
-          <div class="row gy-5 justify-content-between">
-
-            <div class="col-xl-5" data-aos="zoom-out" data-aos-delay="100">
-              <img src="assets/img/ux.webp" id="feat" class="img-fluid" alt="Features Illustration">
-            </div>
-
-            <div class="col-xl-6 d-flex">
-              <div class="row align-self-center gy-4">
-
-                <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
-                  <div class="feature-box d-flex align-items-center">
-                    <i class="bi bi-check"></i>
-                    <h3>Responsive Design</h3>
-                  </div>
-                </div><!-- End Feature Item -->
-
-                <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
-                  <div class="feature-box d-flex align-items-center">
-                    <i class="bi bi-check"></i>
-                    <h3>Fast Performance</h3>
-                  </div>
-                </div><!-- End Feature Item -->
-
-                <div class="col-md-6" data-aos="fade-up" data-aos-delay="400">
-                  <div class="feature-box d-flex align-items-center">
-                    <i class="bi bi-check"></i>
-                    <h3>Secure Systems</h3>
-                  </div>
-                </div><!-- End Feature Item -->
-
-                <div class="col-md-6" data-aos="fade-up" data-aos-delay="500">
-                  <div class="feature-box d-flex align-items-center">
-                    <i class="bi bi-check"></i>
-                    <h3>Custom Solutions</h3>
-                  </div>
-                </div><!-- End Feature Item -->
-
-                <div class="col-md-6" data-aos="fade-up" data-aos-delay="600">
-                  <div class="feature-box d-flex align-items-center">
-                    <i class="bi bi-check"></i>
-                    <h3>Expert Support</h3>
-                  </div>
-                </div><!-- End Feature Item -->
-
-                <div class="col-md-6" data-aos="fade-up" data-aos-delay="700">
-                  <div class="feature-box d-flex align-items-center">
-                    <i class="bi bi-check"></i>
-                    <h3>SEO & Marketing Ready</h3>
-                  </div>
-                </div><!-- End Feature Item -->
-
-              </div>
-            </div>
-
-          </div><!-- End Row -->
-
-        </div><!-- End Container -->
-
-      </section><!-- /Features Section -->
-
-
-    <!-- Pricing Section -->
-      <section id="pricing" class="pricing section">
-
-        <!-- Section Title -->
-        <div class="container section-title" data-aos="fade-up">
-          <h2>Pricing</h2>
-          <div><span>Check Our</span> <span class="description-title">Pricing</span></div>
-        </div><!-- End Section Title -->
-
-        <div class="container">
-
-          <div class="row gy-4">
-
-            <!-- Package 1 - Basic -->
-            <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="100">
-              <div class="pricing-tem text-center p-4 border rounded shadow-sm">
-                <h3 style="color: #20c997;">Basic</h3>
-                <div class="price"><sup>$</sup>300<span> CAD</span></div>
-                <div class="icon">
-                  <i class="bi bi-laptop" style="color: #20c997;"></i>
-                </div>
-                <ul class="list-unstyled mt-3 mb-4">
-                  <li>Website Development</li>
-                  <li>Domain & Hosting</li>
-                  <li>Logo Design</li>
-                  <li>Maintenance</li>
-                </ul>
-                <a href="#contact" class="btn btn-primary">Get Started</a>
-              </div>
-            </div><!-- End Pricing Item -->
-
-            <!-- Package 2 - Standard -->
-            <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="200">
-              <div class="pricing-tem text-center p-4 border rounded shadow-sm">
-                <span class="featured">Featured</span>
-                <h3 style="color: #0dcaf0;">Standard</h3>
-                <div class="price"><sup>$</sup>500<span> CAD</span></div>
-                <div class="icon">
-                  <i class="bi bi-send" style="color: #0dcaf0;"></i>
-                </div>
-                <ul class="list-unstyled mt-3 mb-4">
-                  <li>Everything in Basic</li>
-                  <li>Meta Ads Setup</li>
-                  <li>24/7 IT Support</li>
-                  <li>IA Agents</li>
-                  
-                </ul>
-                <a href="#contact" class="btn btn-primary">Get Started</a>
-              </div>
-            </div><!-- End Pricing Item -->
-
-            <!-- Package 3 - Advanced -->
-            <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="300">
-              <div class="pricing-tem text-center p-4 border rounded shadow-sm">
-                <h3 style="color: #fd7e14;">Advanced</h3>
-                <div class="price"><sup>$</sup>750<span> CAD</span></div>
-                <div class="icon">
-                  <i class="bi bi-gear" style="color: #fd7e14;"></i>
-                </div>
-                <ul class="list-unstyled mt-3 mb-4">
-                  <li>Everything in Standard</li>
-                  <li>SEO Optimization</li>
-                  <li>Custom Features</li>
-                  <li>Analytics & Reporting</li>
-                </ul>
-                <a href="#contact" class="btn btn-primary">Get Started</a>
-              </div>
-            </div><!-- End Pricing Item -->
-
-            <!-- Package 4 - Premium -->
-            <div class="col-lg-3 col-md-6" data-aos="zoom-in" data-aos-delay="400">
-              <div class="pricing-tem text-center p-4 border rounded shadow-sm">
-                <h3 style="color: #0d6efd;">Premium</h3>
-                <div class="price"><sup>$</sup>1000<span> CAD</span></div>
-                <div class="icon">
-                  <i class="bi bi-rocket" style="color: #0d6efd;"></i>
-                </div>
-                <ul class="list-unstyled mt-3 mb-4">
-                  <li>Everything in Advanced</li>
-                  <li>Advanced Marketing Campaigns</li>
-                  <li>Full Customization & Branding</li>
-                  <li>Priority Support & Maintenance</li>
-                </ul>
-                <a href="#contact" class="btn btn-primary">Get Started</a>
-              </div>
-            </div><!-- End Pricing Item -->
-
-          </div><!-- End pricing row -->
-
-        </div>
-
-      </section><!-- /Pricing Section -->
-
-    <!-- Faq Section -->
-      <!-- Faq Section -->
-        <section id="faq" class="faq section light-background">
-
-          <div class="container">
-
-            <div class="row gy-4">
-
-              <!-- FAQ Intro -->
-              <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
-                <div class="content px-xl-5">
-                  <h3><span>Frequently Asked </span><strong>Questions</strong></h3>
-                  <p>
-                    Answers to the most common questions about our web development and IT services. Find out how we can help your business grow.
-                  </p>
-                </div>
-              </div>
-
-              <!-- FAQ Items -->
-              <div class="col-lg-8" data-aos="fade-up" data-aos-delay="200">
-
-                <div class="faq-container">
-
-                  <div class="faq-item faq-active">
-                    <h3><span class="num">1.</span> <span>What is included in the Basic package?</span></h3>
-                    <div class="faq-content">
-                      <p>The Basic package includes website development, logo design, and deployment. It's perfect for startups or small businesses looking to establish an online presence.</p>
-                    </div>
-                    <i class="faq-toggle bi bi-chevron-right"></i>
-                  </div><!-- End Faq item-->
-
-                  <div class="faq-item">
-                    <h3><span class="num">2.</span> <span>Do you provide ongoing support?</span></h3>
-                    <div class="faq-content">
-                      <p>Yes, our Standard, Advanced, and Premium packages include ongoing IT support. We offer 24/7 assistance for technical issues and website maintenance.</p>
-                    </div>
-                    <i class="faq-toggle bi bi-chevron-right"></i>
-                  </div><!-- End Faq item-->
-
-                  <div class="faq-item">
-                    <h3><span class="num">3.</span> <span>Can I upgrade my package later?</span></h3>
-                    <div class="faq-content">
-                      <p>Absolutely. You can upgrade at any time to a higher package to include additional features such as Meta Ads setup, SEO optimization, or full customization.</p>
-                    </div>
-                    <i class="faq-toggle bi bi-chevron-right"></i>
-                  </div><!-- End Faq item-->
-
-                  <div class="faq-item">
-                    <h3><span class="num">4.</span> <span>Do you offer custom designs?</span></h3>
-                    <div class="faq-content">
-                      <p>Yes, all our packages include design services, but Advanced and Premium packages allow for full custom solutions tailored to your brand and business needs.</p>
-                    </div>
-                    <i class="faq-toggle bi bi-chevron-right"></i>
-                  </div><!-- End Faq item-->
-
-                  <div class="faq-item">
-                    <h3><span class="num">5.</span> <span>How long does it take to launch a website?</span></h3>
-                    <div class="faq-content">
-                      <p>Timeline depends on the package and complexity. Basic websites usually take 1–2 weeks, while Advanced and Premium websites with custom features can take 3–6 weeks.</p>
-                    </div>
-                    <i class="faq-toggle bi bi-chevron-right"></i>
-                  </div><!-- End Faq item-->
-
-                </div>
-
-              </div>
-            </div>
-
-          </div>
-
-        </section><!-- /Faq Section -->
-
-
-    <!-- Contact Section -->
-      <section id="contact" class="contact section">
-
-        <!-- Section Title -->
-        <div class="container section-title" data-aos="fade-up">
-          <h2>Contact</h2>
-          <div><span>Need Help?</span> <span class="description-title">Contact Us</span></div>
-        </div><!-- End Section Title -->
-
-        <div class="container" data-aos="fade" data-aos-delay="100">
-
-          <div class="row gy-4">
-
-            <div class="col-lg-4">
-              <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
-                <i class="bi bi-geo-alt flex-shrink-0"></i>
-                <div>
-                  <h3>Address</h3>
-                  <p>2 Vena Way, North York, M9M0G5</p>
-                </div>
-              </div><!-- End Info Item -->
-
-              <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
-                <i class="bi bi-telephone flex-shrink-0"></i>
-                <div>
-                  <h3>Call Us</h3>
-                  <p>647 447 8218</p>
-                </div>
-              </div><!-- End Info Item -->
-
-              <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
-                <i class="bi bi-envelope flex-shrink-0"></i>
-                <div>
-                  <h3>Email Us</h3>
-                  <p>Rodvstudio@gmail.ca</p>
-                </div>
-              </div><!-- End Info Item -->
-
-            </div>
-
-            <div class="col-lg-8">
-              <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
-                <div class="row gy-4">
-
-                  <div class="col-md-6">
-                    <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
-                  </div>
-
-                  <div class="col-md-6 ">
-                    <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
-                  </div>
-
-                  <div class="col-md-12">
-                    <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
-                  </div>
-
-                  <div class="col-md-12">
-                    <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
-                  </div>
-
-                  <div class="col-md-12 text-center">
-                    <div class="loading">Loading</div>
-                    <div class="error-message"></div>
-                    <div class="sent-message">Your message has been sent. Thank you!</div>
-
-                    <button type="submit">Send Message</button>
-                  </div>
-
-                </div>
-              </form>
-            </div><!-- End Contact Form -->
-
-          </div>
-
-        </div>
-
-      </section><!-- /Contact Section -->
-
-  </main>
-
-  <footer id="footer" class="footer light-background">
-
-    <div class="container">
-      <div class="copyright text-center ">
-        <p>© <span>Copyright</span> <strong class="px-1 sitename">RODV</strong> <span>All Rights Reserved</span></p>
+      <div class="portfolio-grid" id="portfolioGrid">
+        <!-- Cards injected by JS -->
       </div>
-      <div class="social-links d-flex justify-content-center">
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev">&#8592;</button>
+    <button class="lightbox-nav lightbox-next" id="lightboxNext">&#8594;</button>
+    <div class="lightbox-content">
+      <img id="lightboxImg" src="" alt="">
+    </div>
+  </div>
+
+  <!-- Contact -->
+  <section class="content-section" id="contact">
+    <div class="section-container">
+      <div class="section-header">
+        <h2 class="pe">Get In Touch</h2>
+        <p class="pe">Contact us today for a free consultation</p>
         
-        <a href="#"><i class="bi bi-facebook"></i></a>
-        <a href="https://www.instagram.com/rodvv_/"><i class="bi bi-instagram"></i></a>
-        <a href="https://www.linkedin.com/in/rodangerrm/"><i class="bi bi-linkedin"></i></a>
       </div>
-      <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you've purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
-        Designed by <a href="https://www.instagram.com/rodvv_/">RODV</a>
+      <div class="contact-grid">
+        <div class="contact-info">
+          <div class="info-item">
+            <i>📍</i>
+            <div>
+              <h4>Address</h4>
+              <p>2 Vena Way, North York, M9M0G5</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <i>📞</i>
+            <div>
+              <h4>Call Us</h4>
+              <p>647 447 8218</p>
+            </div>
+          </div>
+          <div class="info-item">
+            <i>✉️</i>
+            <div>
+              <h4>Email</h4>
+              <p>Rodvstudio@gmail.ca</p>
+            </div>
+          </div>
+        </div>
+        <form class="contact-form glass-card" action="forms/contact.php" method="POST">
+          <div class="form-row">
+            <input type="text" placeholder="Your Name" required>
+            <input type="email" placeholder="Your Email" required>
+          </div>
+          <input type="text" placeholder="Subject" required style="width:100%;margin-bottom:16px;">
+          <textarea placeholder="Message" required style="width:100%;margin-bottom:16px;"></textarea>
+          <button type="submit" class="btn-primary-3d" style="width:100%;justify-content:center;">Send Message</button>
+        </form>
       </div>
     </div>
+  </section>
 
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="social-links">
+      <a href="#"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      <a href="https://www.instagram.com/rodvv_/"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+      <a href="https://www.linkedin.com/in/rodangerrm/"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+    </div>
+    <p>© 2026 RODV Studio. All rights reserved.</p>
   </footer>
 
-  <!-- Scroll Top -->
-  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
-
-  <!-- Preloader -->
-  <div id="preloader"></div>
-
-  <!-- Vendor JS Files -->
-
-
-  <script>
-  const title = document.getElementById("title");
-  const text = title.innerText;
-  title.innerHTML = "";
-
-  [...text].forEach(letter => {
-    const span = document.createElement("span");
-    span.textContent = letter === " " ? "\u00A0" : letter;
-    title.appendChild(span);
-  });
+  <!-- Three.js -->
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+    }
+  }
   </script>
 
+  <script type="module">
+    import * as THREE from 'three';
 
-  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
-  <script src="assets/vendor/aos/aos.js"></script>
-  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+    // ── Setup ──
+    const container = document.getElementById('canvas-container');
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x0a0a0f, 0.035);
 
-  <!-- Main JS File -->
-  <script src="assets/js/main.js"></script>
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.z = 18;
 
+    const renderer = new THREE.WebGLRenderer({
+      antialias: true,
+      alpha: true
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.5;
+    container.appendChild(renderer.domElement);
 
+    // ── Mouse ──
+    const mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
+    document.addEventListener('mousemove', (e) => {
+      mouse.targetX = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.targetY = -(e.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    // ── Particles ──
+    const particleCount = 2000;
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+
+    const color1 = new THREE.Color(0xfbbf24);
+    const color2 = new THREE.Color(0xd97706);
+    const color3 = new THREE.Color(0xffffff);
+
+    for (let i = 0; i < particleCount; i++) {
+      const radius = 12;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos((Math.random() * 2) - 1);
+      const r = radius * Math.cbrt(Math.random());
+
+      positions[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      positions[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      positions[i * 3 + 2] = r * Math.cos(phi);
+
+      const c = Math.random();
+      const col = c < 0.5 ? color1.clone().lerp(color2, Math.random()) : color3.clone().lerp(color1, Math.random() * 0.3);
+      colors[i * 3] = col.r;
+      colors[i * 3 + 1] = col.g;
+      colors[i * 3 + 2] = col.b;
+    }
+
+    const particleGeo = new THREE.BufferGeometry();
+    particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+    const particleMat = new THREE.PointsMaterial({
+      size: 0.06,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.8,
+      blending: THREE.AdditiveBlending,
+      sizeAttenuation: true,
+    });
+    const particles = new THREE.Points(particleGeo, particleMat);
+    scene.add(particles);
+
+    // ── Network lines ──
+    const linePositions = [];
+    const posAttr = particleGeo.attributes.position.array;
+    for (let i = 0; i < particleCount; i++) {
+      for (let j = i + 1; j < particleCount; j++) {
+        const dx = posAttr[i * 3] - posAttr[j * 3];
+        const dy = posAttr[i * 3 + 1] - posAttr[j * 3 + 1];
+        const dz = posAttr[i * 3 + 2] - posAttr[j * 3 + 2];
+        const dist = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        if (dist < 2.5 && Math.random() < 0.02) {
+          linePositions.push(
+            posAttr[i * 3], posAttr[i * 3 + 1], posAttr[i * 3 + 2],
+            posAttr[j * 3], posAttr[j * 3 + 1], posAttr[j * 3 + 2]
+          );
+        }
+      }
+    }
+
+    const lineGeo = new THREE.BufferGeometry();
+    lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePositions, 3));
+    const lineMat = new THREE.LineBasicMaterial({
+      color: 0xfbbf24,
+      transparent: true,
+      opacity: 0.06,
+    });
+    const lines = new THREE.LineSegments(lineGeo, lineMat);
+    scene.add(lines);
+
+    // ── Torus Knot ──
+    const knotGeo = new THREE.TorusKnotGeometry(1.8, 0.6, 128, 16);
+    const knotMat = new THREE.MeshPhysicalMaterial({
+      color: 0xfbbf24,
+      metalness: 0.3,
+      roughness: 0.2,
+      transparent: true,
+      opacity: 0.25,
+      wireframe: true,
+      emissive: 0xfbbf24,
+      emissiveIntensity: 0.05,
+    });
+    const knot = new THREE.Mesh(knotGeo, knotMat);
+    knot.position.set(-3, 0.5, -4);
+    scene.add(knot);
+
+    // ── Icosahedron ──
+    const icoGeo = new THREE.IcosahedronGeometry(1.2, 0);
+    const icoMat = new THREE.MeshPhysicalMaterial({
+      color: 0xd97706,
+      metalness: 0.5,
+      roughness: 0.3,
+      transparent: true,
+      opacity: 0.2,
+      wireframe: true,
+      emissive: 0xd97706,
+      emissiveIntensity: 0.03,
+    });
+    const ico = new THREE.Mesh(icoGeo, icoMat);
+    ico.position.set(4, -1, -6);
+    scene.add(ico);
+
+    // ── Octahedron ──
+    const octGeo = new THREE.OctahedronGeometry(1.0);
+    const octMat = new THREE.MeshPhysicalMaterial({
+      color: 0xfbbf24,
+      metalness: 0.4,
+      roughness: 0.3,
+      transparent: true,
+      opacity: 0.15,
+      wireframe: true,
+    });
+    const oct = new THREE.Mesh(octGeo, octMat);
+    oct.position.set(2, 2.5, -8);
+    scene.add(oct);
+
+    // ── Dodecahedron ──
+    const dodGeo = new THREE.DodecahedronGeometry(0.9);
+    const dodMat = new THREE.MeshPhysicalMaterial({
+      color: 0xffffff,
+      metalness: 0.3,
+      roughness: 0.4,
+      transparent: true,
+      opacity: 0.1,
+      wireframe: true,
+    });
+    const dod = new THREE.Mesh(dodGeo, dodMat);
+    dod.position.set(-4, -1.5, -7);
+    scene.add(dod);
+
+    // ── Small orbiting particles (ring) ──
+    const ringParticles = 200;
+    const ringPos = new Float32Array(ringParticles * 3);
+    for (let i = 0; i < ringParticles; i++) {
+      const angle = (i / ringParticles) * Math.PI * 2;
+      const radius = 4.5;
+      const yOffset = Math.sin(angle * 3) * 1.2;
+      ringPos[i * 3] = Math.cos(angle) * radius;
+      ringPos[i * 3 + 1] = yOffset;
+      ringPos[i * 3 + 2] = Math.sin(angle) * radius;
+    }
+    const ringGeo = new THREE.BufferGeometry();
+    ringGeo.setAttribute('position', new THREE.BufferAttribute(ringPos, 3));
+    const ringMat = new THREE.PointsMaterial({
+      size: 0.04,
+      color: 0xfbbf24,
+      transparent: true,
+      opacity: 0.4,
+      blending: THREE.AdditiveBlending,
+      sizeAttenuation: true,
+    });
+    const ring = new THREE.Points(ringGeo, ringMat);
+    scene.add(ring);
+
+    // ── Animation ──
+    let clock = new THREE.Clock();
+
+    function animate() {
+      const elapsed = clock.getElapsedTime();
+
+      mouse.x += (mouse.targetX - mouse.x) * 0.05;
+      mouse.y += (mouse.targetY - mouse.y) * 0.05;
+
+      particles.rotation.y = elapsed * 0.015;
+      particles.rotation.x = Math.sin(elapsed * 0.01) * 0.05;
+      lines.rotation.y = elapsed * 0.015;
+      lines.rotation.x = Math.sin(elapsed * 0.01) * 0.05;
+
+      knot.rotation.x = elapsed * 0.2;
+      knot.rotation.y = elapsed * 0.3;
+      knot.position.x = -3 + Math.sin(elapsed * 0.15) * 0.8;
+      knot.position.y = 0.5 + Math.cos(elapsed * 0.2) * 0.5;
+
+      ico.rotation.x = elapsed * 0.15;
+      ico.rotation.y = elapsed * 0.25;
+      ico.position.x = 4 + Math.sin(elapsed * 0.12 + 1) * 0.8;
+      ico.position.y = -1 + Math.cos(elapsed * 0.18 + 1) * 0.5;
+
+      oct.rotation.x = elapsed * 0.25;
+      oct.rotation.y = elapsed * 0.2;
+      oct.position.x = 2 + Math.sin(elapsed * 0.1 + 2) * 0.6;
+      oct.position.y = 2.5 + Math.cos(elapsed * 0.15 + 2) * 0.4;
+
+      dod.rotation.x = elapsed * 0.18;
+      dod.rotation.y = elapsed * 0.22;
+
+      ring.rotation.y = elapsed * 0.1;
+      ring.rotation.x = Math.sin(elapsed * 0.05) * 0.1;
+
+      camera.position.x += (mouse.x * 1.5 - camera.position.x) * 0.02;
+      camera.position.y += (mouse.y * 1.0 - camera.position.y) * 0.02;
+      camera.lookAt(0, 0, 0);
+
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // ── Loading ──
+    const bar = document.getElementById('loader-bar-inner');
+    bar.style.width = '100%';
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hidden');
+    }, 1800);
+
+    // ── Navbar scroll ──
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 80) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // ── Hamburger ──
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('open');
+    });
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('open');
+      });
+    });
+
+    // ── Smooth scroll ──
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // ── Portfolio ──
+    const images = [
+      { src: '/assets/img/3d.jpg', label: '3D Modeling', desc: 'Three-dimensional visualization' },
+      { src: '/assets/img/sys.jpg', label: 'System Architecture', desc: 'Infrastructure design' },
+      { src: '/assets/img/ux.webp', label: 'UX Research', desc: 'User experience design' },
+      { src: '/assets/img/design.png', label: 'UI Design', desc: 'Interface prototypes' },
+      { src: '/assets/img/sc.png', label: 'Smart Code', desc: 'Clean architecture' },
+      { src: '/assets/img/resp.png', label: 'Responsive Design', desc: 'Cross-platform ready' },
+      { src: '/assets/img/connect.jpg', label: 'Connectivity', desc: 'Network solutions' },
+      { src: '/assets/img/company.jpg', label: 'Company Brand', desc: 'Brand identity' },
+      { src: '/assets/img/company.jpg', label: 'Company Brand', desc: 'Brand identity' },
+    ];
+
+    const grid = document.getElementById('portfolioGrid');
+
+    images.forEach((img, index) => {
+      const card = document.createElement('div');
+      card.className = 'portfolio-card reveal';
+      card.innerHTML = `
+        <div class="img-placeholder"><div class="spinner"></div></div>
+        <img src="${img.src}" alt="${img.label}" loading="lazy"
+          onload="this.previousElementSibling.style.display='none'"
+          onerror="this.previousElementSibling.innerHTML='&#9888;'">
+        <div class="card-overlay">
+          <h4>${img.label}</h4>
+          <p>${img.desc}</p>
+        </div>
+      `;
+      card.addEventListener('click', () => openLightbox(index));
+      grid.appendChild(card);
+    });
+
+    // ── Lightbox ──
+    let currentIndex = 0;
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+
+    window.openLightbox = (index) => {
+      currentIndex = index;
+      lightboxImg.src = images[index].src;
+      lightboxImg.alt = images[index].label;
+      lightbox.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const closeLightbox = () => {
+      lightbox.classList.remove('open');
+      document.body.style.overflow = '';
+    };
+
+    document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+    lightbox.addEventListener('click', (e) => { if (e.target === lightbox) closeLightbox(); });
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') navigateLightbox(-1);
+      if (e.key === 'ArrowRight') navigateLightbox(1);
+    });
+
+    const navigateLightbox = (dir) => {
+      currentIndex = (currentIndex + dir + images.length) % images.length;
+      lightboxImg.style.opacity = '0';
+      setTimeout(() => {
+        lightboxImg.src = images[currentIndex].src;
+        lightboxImg.alt = images[currentIndex].label;
+        lightboxImg.style.opacity = '1';
+      }, 150);
+    };
+
+    document.getElementById('lightboxPrev').addEventListener('click', () => navigateLightbox(-1));
+    document.getElementById('lightboxNext').addEventListener('click', () => navigateLightbox(1));
+
+    // ── Scroll Reveal ──
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // Observe service cards and stats too
+    document.querySelectorAll('.glass-card, .stat-item').forEach(el => {
+      el.classList.add('reveal');
+      revealObserver.observe(el);
+    });
+  </script>
 
 </body>
-
 </html>
